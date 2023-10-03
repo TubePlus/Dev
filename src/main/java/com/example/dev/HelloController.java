@@ -14,4 +14,9 @@ public class HelloController {
     public String hello(HelloDto helloDto) {
         return helloDto.id;
     }
+
+    @GetMapping("/bye")
+    public String bye() {
+        return "bye";
+    }
 }
