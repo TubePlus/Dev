@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tubeplus
+  namespace: tubeplus
+  labels:
+    project: tubeplus
+    version: "1.0"
+spec:
+  defaultBackend:
+    service:
+      name: home
+      port:
+        number: 80
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: api/v1/etc
+        backend: 
+          service:
+            name: etc-app
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: api/v1/users
+        backend: 
+          service:
+            name: user-app
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: api/v1/community
+        backend: 
+          service:
+            name: community-app
+            port:
+              number: 80
+  - http:
+      paths:
+      - pathType: Prefix
+        path: api/v1/board
+        backend: 
+          service:
+            name: board-app
+            port:
+              number: 80

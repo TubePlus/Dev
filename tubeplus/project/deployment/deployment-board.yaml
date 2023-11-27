@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: board-app
+  namespace: tubeplus  
+  labels:
+    service: board
+    project: tubeplus
+    version: "1.0"
+spec:
+  type: ClusterIP
+  selector:
+    service: board
+    project: tubeplus
+    version: "1.0"
+  ports:
+  - port: 80
+    targetPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 2
+    maxSurge: 1
+metadata:
+  name: board
+  namespace: tubeplus
+  labels:
+    service: board
+    project: tubeplus
+    version: "1.0"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: board
+      project: tubeplus
+      version: "1.0"
+  template:
+    metadata:
+      labels:
+        service: board
+        project: tubeplus
+        version: "1.0"
+    spec:
+      containers:
+      - name: board
+        image: 7eom14/tubeplus-board:dev-1
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "50m"
+        ports:
+        - containerPort: 8080
+        env:
+          - name: PORT
+            valueFrom:
+              configMapKeyRef:
+                key: BOARD_HTTP_PORT
+                name: port-config
+
+---
+
